@@ -370,10 +370,6 @@ class FidelityAveraged(PropagationStatic):
         # plt.show()
         # exit()
 
-        
-
-        
-
         return energy, rand_vec
 
 

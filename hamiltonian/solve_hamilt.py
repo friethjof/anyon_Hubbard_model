@@ -1,13 +1,8 @@
-import os
-import itertools
-import shutil
 import math
 import time
 from pathlib import Path
-import subprocess
 from collections.abc import Iterable
 
-import matplotlib.colors as colors
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy
@@ -20,9 +15,6 @@ from helper import operators
 from helper import other_tools
 from helper import palindromic_number_states
 
-# author: Friethjof Theel
-# date: 15.06.2022
-# last modified: Feb 2023
 
 
 #===============================================================================
@@ -110,21 +102,6 @@ class AnyonHubbardHamiltonian():
             theta_list = np.array(theta_list),
             basis_list = self.basis.basis_list
         )
-
-        # for i, b_m in enumerate(self.basis.basis_list):
-        #     for j, b_n in enumerate(self.basis.basis_list):
-
-        #         self._hamilt[i, j] = operators.get_hamilt_mn(
-        #             bc = self.bc,
-        #             L = self.L,
-        #             J_list = J_list,
-        #             U_list = U_list,
-        #             N = self.N,
-        #             theta_list = theta_list,
-        #             b_m = b_m,
-        #             b_n = b_n,
-        #         )
-
 
         # check whether hamiltonian is hermitian
         assert np.allclose(self._hamilt, np.conjugate(self._hamilt.T))
@@ -419,17 +396,6 @@ class AnyonHubbardHamiltonian():
             print(self.theta/np.pi)
             raise ValueError('Dmat H is not diagonal!')
 
-        # np.savez(
-        #     path_npz,
-        #     diag_U=np.diagonal(D_mat_U),
-        #     diag_H=np.diagonal(D_mat_H)
-        # )
-
-        # length = self.basis.length
-        # x, y = np.meshgrid(np.arange(length), np.arange(length))
-        # im = plt.pcolormesh(x, y, np.abs(D_mat_H.T), shading='auto')
-        # plt.colorbar(im)
-        # plt.show()
 
         return np.diagonal(D_mat_H), np.diagonal(D_mat_U)
 

@@ -63,54 +63,8 @@ def find_degeneracies(eval_in, threshold=1e-10):
             dict_energies[str(energy)] = [i]
 
 
-        # # check whether energy appears in set
-        # bool_exists = appears_in_set(energy_set, energy, threshold)
-
-        # if bool_exists:
-        #     # add to list
-
-
-        # else:
-        #     # make new entry
-        #     dict_energies[str(energy)] = [i]
-
-        # if bool_add:
-        #     add_to_dict(dict_energies)
-
-        #     dict_energies[energy_prev] = state_ind_list
-
-        #     # initialize new
-        #     state_ind_list = [i]
-
-        # else:
-        #     state_ind_list.append(i)
-
-        # energy_prev = str(energy)
-
-    # dict_energies[energy_prev] = state_ind_list
-
     return dict_energies
 
-# def get_path_prop(path_data_top, L, N, U, theta, psi_ini):
-#     """Create path of data from input pars. J is assumed to be always 1
-#
-#     Args:
-#         path_data_top (Path): top path of data folder
-#         L (int): number of lattice sites
-#         N (int): number of atoms
-#         U (float): on-site interaction
-#         theta (float): statistical angle
-#         psi_ini (str): initial state
-#
-#     Returns:
-#         path_prop (Path): path where propagation is stored
-#     """
-#
-#     path_basis = get_path_basis(path_data_top, L, N, U, theta)
-#     path_prop = path_basis/f'{psi_ini}'
-#     path_prop.mkdir(parents=True, exist_ok=True)
-#
-#     return path_prop
 
 
 def make_schmidt_decomp(bipartitepurestate_tensor):
@@ -151,22 +105,6 @@ def is_file_older_than(path_file, date_list):
 
 def orthonormalize_input_vec(vec_list):
     "return a set of orthogonal and normed vectors"
-
-    # Q, R = np.linalg.qr(vec_list)
-
-    # ortho_bool = True
-
-    # vec_out = []
-    # for i, vec1 in enumerate(vec_list):
-
-    #     for j, vec2 in enumerate(vec_list):
-    #         sp = np.vdot(vec1, vec2)
-    #         if i == j and np.abs(sp - 1) > 1e-10:
-    #             ortho_bool = False
-
-    #         if i != j and np.abs(sp) > 1e-10:
-    #             ortho_bool = False
-    # assert ortho_bool
 
     def gram_schmidt(vectors):
         basis = []

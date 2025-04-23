@@ -16,7 +16,7 @@ from helper import operators
 
 #===============================================================================
 class PropagationTD(AnyonHubbardHamiltonian):
-    """Propagation of a given initial state."""
+    """Propagation of a given initial state of a time-dependent Hamiltonian."""
 
     def __init__(self, bc, L, N, J, U, theta_fct_list, psi0_str, Tprop, dtprop):
         """Initialize parameters.

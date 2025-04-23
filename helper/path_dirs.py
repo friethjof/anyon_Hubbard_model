@@ -149,19 +149,3 @@ def get_dum_Tf_dt(Tprop, dtprop):
     return dum_Tf_dt
 
 
-# def get_dum_name_U_theta(U, theta, J=None):
-#     '''Determine part of figure name specifying U, theta, J, if J is None
-#     assume J=1 and don't mention it. If J=0 and U=1, use U='inf'
-#     '''
-#     theta_ = f'{theta/math.pi:.3f}'.replace('.', '_')
-#     U_ = f'{U:.3f}'.replace('.', '_')
-#     if J is not None and J != 1:
-#         if J == 0 or U == 1:
-#             U_theta_ = f'U_inf_thpi_{theta_}'
-#         else:
-#             err_msg = f'U={U}, J={J}; J should be 0 and U=1 for U=inf!'
-#             raise ValueError(err_msg)
-#     else:
-#         U_theta_ = f'U_{U_}_thpi_{theta_}'
-#     return U_theta_
-

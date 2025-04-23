@@ -11,7 +11,7 @@ from propagation.scan_schmidt_echo import ScanClass_SchmidtEcho
 #-------------------------------------------------------------------------------
 # ground state analysis
 #-------------------------------------------------------------------------------
-if True:
+if False:
     th_list = np.array([0.0, 1.0])*np.pi
     # th_list = np.array([0, 0.2, 0.5, 0.8, 1.0])*np.pi
     # th_list = np.array([0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0])*np.pi

@@ -6,13 +6,37 @@ from typing import Callable
 from collections.abc import Iterable
 
 
-adv_fig = Path('/afs/physnet.uni-hamburg.de/users/zoq_t/ftheel/'
-        'Schreibtisch/project_ahm2/nice_figures')
+
+path_data_afs = Path('/afs/physnet.uni-hamburg.de/project/zoq_t/harm_osc_coll/13/project_ahm_integrability')
+path_proj_afs = Path(f'/afs/physnet.uni-hamburg.de/users/zoq_t/ftheel/Schreibtisch/project_ahm2')
+
+
+path_data_cluster = Path('/superscratch/ftheel/project_ahm2')
+path_proj_cluster = Path('/data/homes/ftheel/Desktop/project_ahm2')
+
+
+# check whether the script is executed from the cluster or the AFS
+if os.access(path_proj_afs, os.W_OK):  
+    path_proj = path_proj_afs
+    path_basis = path_data_afs
+    on_cluster = False
+
+else:
+    if path_data_cluster.exists():
+        path_proj = path_proj_cluster
+        path_basis = path_data_cluster
+        on_cluster = True
+
+    else:
+        raise ValueError
+
+adv_fig = path_proj/'nice_figures'
+
+
 
 
 def get_path_names(type, bc):
     if type == 'basis':
-        path_basis = Path(f'/afs/physnet.uni-hamburg.de/project/zoq_t/harm_osc_coll/13/project_ahm_integrability')
         if bc == 'open':
             return path_basis/'open_boundary_conditions'
         elif bc == 'periodic':
@@ -25,7 +49,7 @@ def get_path_names(type, bc):
             raise NotImplementedError
 
     elif type == 'fig':
-        path_proj = Path(f'/afs/physnet.uni-hamburg.de/users/zoq_t/ftheel/Schreibtisch/project_ahm2')
+
         if bc == 'open':
             return path_proj/'figures_obc'
         elif bc == 'periodic':

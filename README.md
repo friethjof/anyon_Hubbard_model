@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 The programm solves the one-dimensional anyon-Hubbard model via exact diagonalization.
 
 Before usage, edit the paths in helper/path_dirs.py to specify the locations, where to store the data or the figures.
@@ -8,3 +9,11 @@ main_module.py: general analysis tool to perform parameter scans or generate qui
 figure_module.py: call more elaborate plotting functions
 
 test_module.py: test stuff
+=======
+This programm is meant to solve the one-dimensional anyon-Hubbard model via exact diagonalization.
+
+The current version should become a cleaned up version of an older version (which is much larger).
+
+
+
+>>>>>>> 4035917 (reduce programm to a minimum in order refurbish the code)

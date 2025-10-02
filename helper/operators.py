@@ -6,7 +6,7 @@ from collections.abc import Iterable
 
 @njit
 def nstate_allclose(arr1, arr2):
-    'Provide an alternative to compare two number states'
+    r'Provide an alternative to compare two number states'
 
     all_close = True
     for el1, el2 in zip(arr1, arr2):
@@ -19,7 +19,7 @@ def nstate_allclose(arr1, arr2):
 
 @njit
 def hop_term_j(j, N, theta, basis1, basis2, bc):
-    """
+    r"""
     open, periodic, twisted: b_j^t exp(i*theta*n_j) b_j+1
     twisted gauge:           b_j^t exp(i*theta*n_j) b_j+1 * exp(-i*theta*N/L)
     """
@@ -57,7 +57,7 @@ def hop_term_j(j, N, theta, basis1, basis2, bc):
 
 @njit
 def hop_term_j_dagger(j, N, theta, basis1, basis2, bc):
-    """    
+    r"""    
     open, periodic, twisted: b_j+1^t exp(-i*theta*n_j) b_j
     twisted gauge:           b_j+1^t exp(-i*theta*n_j) b_j * exp(i*theta*N/L)
     """
@@ -97,7 +97,7 @@ def hop_term_j_dagger(j, N, theta, basis1, basis2, bc):
 
 @njit
 def onsite_int(j, basis1, basis2):
-    "U/2 sum_j^L  n_j(n_j-1)"
+    r"U/2 sum_j^L  n_j(n_j-1)"
 
     if not nstate_allclose(basis1, basis2):
         return 0
@@ -115,7 +115,7 @@ def onsite_int(j, basis1, basis2):
 #-------------------------------------------------------------------------------
 @njit
 def hop_term_L(N, theta, basis1, basis2, bc):
-    """
+    r"""
     periodic bc: b_L^t exp(i*theta*n_L) b_1
     twisted  bc: b_L^t exp(i*theta*n_L) b_1 * exp(-i*theta*N)
     """
@@ -156,7 +156,7 @@ def hop_term_L(N, theta, basis1, basis2, bc):
 
 @njit
 def hop_term_L_dagger(N, theta, basis1, basis2, bc):
-    """
+    r"""
     periodic bc: b_1^t exp(-i*theta*n_L) b_L
     twisted  bc: b_1^t exp(-i*theta*n_L) b_L * exp(i*theta*N)
     """
@@ -285,7 +285,7 @@ def get_hamilt_mat(bc, L, J_list, U_list, N, theta_list, basis_list):
 #-----------------------------------------------------------------------
 @njit
 def bi_dagger_bj(basis1, basis2, i, j, N):
-    "<1,2,0,1| b_i^t b_j | 2,2,0,0>"
+    r"<1,2,0,1| b_i^t b_j | 2,2,0,0>"
 
     b1 = basis1.copy()
     b2 = basis2.copy()
@@ -314,7 +314,7 @@ def bi_dagger_bj(basis1, basis2, i, j, N):
 #-----------------------------------------------------------------------
 @njit
 def bj_dagger_bi_dagger_bi_bj(basis1, basis2, i, j, N):
-    "<1,2,0,1| b_j^t b_i^t b_i b_j | 2,2,0,0>"
+    r"<1,2,0,1| b_j^t b_i^t b_i b_j | 2,2,0,0>"
 
     b1 = basis1.copy()
     b2 = basis2.copy()
@@ -355,7 +355,7 @@ def bj_dagger_bi_dagger_bi_bj(basis1, basis2, i, j, N):
 
 #-----------------------------------------------------------------------
 def get_2b_ninj(state, L, basis_list):
-    "Calculate <n_i n_j>"
+    r"Calculate <n_i n_j>"
     num_2b_mat = np.zeros((L, L))
     for m in range(0, L):
         for n in range(0, L):
@@ -374,7 +374,7 @@ def get_2b_ninj(state, L, basis_list):
 #===============================================================================
 @njit
 def get_hop_op_i(basis_list, site_i, theta):
-    """
+    r"""
         b_i^\dagger exp(i*theta*n_j) b_{i+1} 
         + b_{i+1}^\dagger exp(-i*theta*n_j) b_i 
     """
@@ -460,7 +460,7 @@ def get_bjbibibj_mats(basis_list, L):
 
 
 def calc_bjbibibj(psi, L, basis_list):
-    """Calculate the two-body density for the eigenstates"""
+    r"""Calculate the two-body density for the eigenstates"""
 
     bjbibibj_mats = get_bjbibibj_mats(basis_list, L)
 
@@ -513,7 +513,7 @@ def fast_factorial(n):
 
 @njit
 def get_U_nm(basis_m, basis_n):
-    """ U_L |nvec> = sum_i^L (b_i^dagger)^(n_i+1) / sqrt(n_i!) |0>_i"""
+    r""" U_L |nvec> = sum_i^L (b_i^dagger)^(n_i+1) / sqrt(n_i!) |0>_i"""
 
     # L = basis_m.shape[0]
     L = len(basis_m)
@@ -548,7 +548,7 @@ def get_U_nm(basis_m, basis_n):
 
 @njit
 def get_translation_op(basis_list):
-    """ U_L |Psi> = sum_i^L (b_i^dagger)^(n_i+1) / sqrt(n_i!) |0>_i"""
+    r""" U_L |Psi> = sum_i^L (b_i^dagger)^(n_i+1) / sqrt(n_i!) |0>_i"""
 
     # L = basis_list.shape[1]
     # length = basis_list.shape[0]
@@ -584,7 +584,7 @@ def get_translation_op(basis_list):
 
 @njit
 def get_inv_op(basis_list):
-    """ I : inversion operator: |1, 2, 3, 4>  -->  |4, 3, 2, 1> """
+    r""" I : inversion operator: |1, 2, 3, 4>  -->  |4, 3, 2, 1> """
 
     length = len(basis_list)
     inv_op = np.zeros((length, length))
@@ -602,7 +602,7 @@ def get_inv_op(basis_list):
 
 # @njit
 def get_U_op(basis_list, theta):
-    """ U(theta): exp(i \theta \sum_{k=1}^L n_k(n_k -1)/2) """
+    r""" U(theta): exp(i \theta \sum_{k=1}^L n_k(n_k -1)/2) """
 
     length = len(basis_list)
     L = len(basis_list[0])

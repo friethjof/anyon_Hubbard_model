@@ -97,26 +97,35 @@ class AnyonHubbardHamiltonian:
             print('basis size:', self.basis.length)
             clock_1 = time.time()
 
+        #----------------------------------------------------------------------
         # Prepare θ, J, U as lists if they're not Iterable
-        theta_list = (
-            self.theta if isinstance(self.theta, Iterable)
-            else ([self.theta] * (self.L - 1) if self.bc == 'open' else [self.theta] * self.L)
-        )
-        J_list = (
-            self.J if isinstance(self.J, Iterable)
-            else ([self.J] * (self.L - 1) if self.bc == 'open' else [self.J] * self.L)
-        )
-        U_list = (
-            self.U if isinstance(self.U, Iterable)
-            else [self.U] * self.L
-        )
+        if isinstance(self.theta, Iterable):
+            theta_list = self.theta
+        elif self.bc == 'open':
+            # theta is not iterable and open bc 
+            theta_list = [self.theta] * (self.L - 1)
+        else:
+            # theta is not iterable and periodic/gauge bc 
+            theta_list = [self.theta] * self.L
 
+        if isinstance(self.J, Iterable):
+            J_list = self.J
+        elif self.bc == 'open':
+            J_list = [self.J] * (self.L - 1)
+        else:
+            J_list = [self.J] * self.L
+
+        if isinstance(self.U, Iterable):
+            U_list = self.U
+        else:
+            U_list = [self.U] * self.L
+
+        #----------------------------------------------------------------------
+        # create hamiltonian matrix
         self._hamilt = operators.get_hamilt_mat(
             bc=self.bc,
-            L=self.L,
             J_list=np.array(J_list),
             U_list=np.array(U_list),
-            N=self.N,
             theta_list=np.array(theta_list),
             basis_list=self.basis.basis_list,
         )

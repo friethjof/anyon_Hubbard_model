@@ -5,7 +5,7 @@ from typing import Optional, Union, Any
 import numpy as np
 
 from hamiltonian.basis import Basis
-from helper import path_dirs, operators, other_tools
+from helper import construct_hamilt, path_dirs, other_tools
 
 
 class AnyonHubbardHamiltonian:
@@ -122,7 +122,7 @@ class AnyonHubbardHamiltonian:
 
         #----------------------------------------------------------------------
         # create hamiltonian matrix
-        self._hamilt = operators.get_hamilt_mat(
+        self._hamilt = construct_hamilt.get_hamilt_mat(
             bc=self.bc,
             J_list=np.array(J_list),
             U_list=np.array(U_list),

@@ -5,6 +5,7 @@ from typing import Optional, Union, Any, Iterable
 import numpy as np
 
 from hamiltonian.basis import Basis
+from hamiltonian.plot_helper import PlotObservables
 from helper import construct_hamilt, path_dirs, other_tools
 
 
@@ -75,6 +76,8 @@ class AnyonHubbardHamiltonian:
                 U=self.U,
                 theta=self.theta
             )
+        
+        self.plot = PlotObservables(self)
 
 
     def make_diagonalization(self) -> None:
@@ -244,3 +247,36 @@ class AnyonHubbardHamiltonian:
             self.make_diagonalization()
 
         return self._evecs
+
+
+    def gs_psi(self) -> np.array:
+        """
+        Returns:
+            Ground state psi (np.array)
+        """
+        return self.evecs()[0]
+
+
+    #===========================================================================
+    def one_site_density(self):
+        """
+        Calculate and return the one-site density as 1D-array
+        rho_i = <psi| b_i^t b^i |psi>
+        where b_i^t is the creation operator of site i
+
+        Returns:
+            (real) one-site density (np.array)
+        """
+
+        psi0 = self.gs_psi()
+        obd = []
+        for i in range(self.L):
+            obd.append(
+                np.vdot(psi0, self.basis.op_bi_bi(i).dot(psi0))
+            )
+        obd_arr = np.array(obd)
+
+        if np.max(np.abs(obd_arr.imag)) > 1e-10:
+            raise ValueError('Imaginary part is larger than threshold', obd_arr)
+
+        return obd_arr.real

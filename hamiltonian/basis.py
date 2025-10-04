@@ -60,3 +60,24 @@ class Basis:
                     length - 1, total_sum - value
                 ):
                     yield [value] + permutation
+
+
+    #===========================================================================
+    def op_bi_bi(self, i:int) -> np.array:
+        """
+        Construct density operator of site i
+
+        The one-site operator can be represented as diagonal matrix in number
+        state basis given by {|n>}
+
+        op_i = <m_1, ..., m_L | b_i^t b_i | n_1, ..., n_L>
+             = <m_1, ..., m_L | n_1, ..., n_L> * n_i
+             = n_i * delta_mn
+
+        Args:
+            i (int): site index
+        
+        Returns:
+            one-site operator in number state representation (np.array)
+        """
+        return np.diag(self.basis_list[:, i])

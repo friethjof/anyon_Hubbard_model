@@ -1,6 +1,6 @@
 import time
-from collections.abc import Iterable
-from typing import Optional, Union, Any
+from pathlib import Path
+from typing import Optional, Union, Any, Iterable
 
 import numpy as np
 
@@ -67,7 +67,14 @@ class AnyonHubbardHamiltonian:
         self._evecs: Optional[np.ndarray] = None
 
         if self.bool_save:
-            self.path_basis: str = path_dirs.get_path_basis(**args_in)
+            self.path_basis: Path = path_dirs.get_path_basis(
+                bc=self.bc,
+                L=self.L,
+                N=self.N,
+                J=self.J,
+                U=self.U,
+                theta=self.theta
+            )
 
 
     def make_diagonalization(self) -> None:

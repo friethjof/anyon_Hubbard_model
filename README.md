@@ -33,14 +33,20 @@ See also:
 
 
 
-## Module
+## Module and Usage
 
-The programm solves the one-dimensional anyon-Hubbard model via exact diagonalization and, therefore, gives full access to all eigenstates of the Hamiltonian. 
+The program solves the one-dimensional anyon-Hubbard model via exact diagonalization and, therefore, gives full access to all eigenstates of the Hamiltonian. 
 
 The limit of the system size is set by the computational resources. The Hamiltonian is expressed in a number state basis and corresponds to a matrix which scales, like
 $$
 (\mathcal{N}\times\mathcal{N}), \hspace{0.5cm} \rm{where} \hspace{0.2cm} \mathcal{N} = {N+L-1 \choose L-1}.
 $$
+
+
+
+For an example how to setup the system and visualize the ground state, see **ground_state_example_notebook.ipynb**.
+
+
 
 
 
@@ -58,9 +64,9 @@ to change the destination of data and figures that are stored while running the 
 
 
 
-Required modules:
+For required modules see the file *requirements.txt*, which has been created using the module **pipreqs **(can be installed with pip).
 
-​	
+
 
 
 

@@ -60,7 +60,9 @@ class AnyonHubbardHamiltonian:
         if 'theta' not in args_in:
             raise ValueError("Argument 'theta' (stat. phase(s)) required.")
         self.theta: Union[float, Iterable[float]] = args_in['theta']
+
         self.basis: Basis = Basis(self.L, self.N)
+
         self.bool_save: bool = args_in.get('bool_save', False)
 
         self._hamilt: Optional[np.ndarray] = None
@@ -77,6 +79,7 @@ class AnyonHubbardHamiltonian:
                 theta=self.theta
             )
         
+        # plotting module
         self.plot = PlotObservables(self)
 
 

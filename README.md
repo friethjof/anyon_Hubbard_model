@@ -79,3 +79,12 @@ python -m unittest discover
 ```
 
 During the test, for specific system settings the Hamiltonian is numerically created from scratch and compared to analytic derived solutions.
+
+
+
+Setup hooks for checking code before pushing
+
+```bash
+pip install pre-commit
+pre-commit install --hook-type pre-push
+```

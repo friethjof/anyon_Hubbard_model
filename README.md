@@ -4,7 +4,27 @@
 
 ## System
 
-We consider the one-dimensional anyon-Hubbard in one-dimension. This system can be simulated considering two bosons in a deep optical lattice with density-dependent hopping amplitudes.
+We consider the one-dimensional anyon-Hubbard in one-dimension. This system can be simulated considering bosons in a deep optical lattice with density-dependent hopping amplitudes.
+
+The corresponding Hamiltonian for open boundary condition reads,
+$$
+\hat{H} = -J\sum_{j=1}^{L-1}\left(\hat{b}_j^\dagger e^{i\theta \hat{n}_j} \hat{b}_{j+1} +  \mathrm{H.c.} \right) + \frac{U}{2} \sum_{j=1}^{L} \hat{n}_j\left(\hat{n}_j- 1\right).
+$$
+The system parameters are:
+
+- $L$: number of lattice sites
+- $N$: number of atoms
+- $J$: hopping amplitude
+- $U$: on-site interaction
+- $\theta$: statistical parameter
+- $\hat{b}_i^{(\dagger)}$: bosonic annihilation (creation) operator at site $i$
+- $\hat{n}_i= \hat{b}_i^\dagger \hat{b}_i$: number operator at site $i$
+
+For $\theta=0$ the classical Bose-Hubbard Hamiltonian is restored.
+
+Periodic and twisted boundary conditions have been also implemented. 
+
+
 
 See also:
 
@@ -13,12 +33,14 @@ See also:
 
 
 
-
-
 ## Module
 
-The programm solves the one-dimensional anyon-Hubbard model via exact diagonalization and, therefore, gives full access to the complete many-body wave-function.
+The programm solves the one-dimensional anyon-Hubbard model via exact diagonalization and, therefore, gives full access to all eigenstates of the Hamiltonian. 
 
+The limit of the system size is set by the computational resources. The Hamiltonian is expressed in a number state basis and corresponds to a matrix which scales, like
+$$
+(\mathcal{N}\times\mathcal{N}), \hspace{0.5cm} \rm{where} \hspace{0.2cm} \mathcal{N} = {N+L-1 \choose L-1}.
+$$
 
 
 
@@ -32,7 +54,7 @@ Change in the file /helper/path_dirs.py the parameters
 - path_data = Path('../data_ahm')
 - path_fig = Path(f'../figures_ahm')
 
-to change the destination of data and figures that are stored and created while running the program.
+to change the destination of data and figures that are stored while running the program.
 
 
 
@@ -44,7 +66,7 @@ Required modules:
 
 ## Test
 
-Execute the following line to test the code:
+Execute the following line in the main directory to test the code:
 
 ```bash
 python -m unittest discover

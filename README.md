@@ -7,9 +7,13 @@
 We consider the one-dimensional anyon-Hubbard in one-dimension. This system can be simulated considering bosons in a deep optical lattice with density-dependent hopping amplitudes.
 
 The corresponding Hamiltonian for open boundary condition reads,
+
+
 $$
 \hat{H} = -J\sum_{j=1}^{L-1}\left(\hat{b}_j^\dagger e^{i\theta \hat{n}_j} \hat{b}_{j+1} +  \mathrm{H.c.} \right) + \frac{U}{2} \sum_{j=1}^{L} \hat{n}_j\left(\hat{n}_j- 1\right).
 $$
+
+
 The system parameters are:
 
 - $L$: number of lattice sites
@@ -38,6 +42,8 @@ See also:
 The program solves the one-dimensional anyon-Hubbard model via exact diagonalization and, therefore, gives full access to all eigenstates of the Hamiltonian. 
 
 The limit of the system size is set by the computational resources. The Hamiltonian is expressed in a number state basis and corresponds to a matrix which scales, like
+
+
 $$
 (\mathcal{N}\times\mathcal{N}), \hspace{0.5cm} \rm{where} \hspace{0.2cm} \mathcal{N} = {N+L-1 \choose L-1}.
 $$

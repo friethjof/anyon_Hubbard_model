@@ -1,6 +1,6 @@
 import time
 from pathlib import Path
-from typing import Optional, Union, Any, Iterable
+from typing import Optional, Union, Any, Sequence
 
 import numpy as np
 
@@ -27,9 +27,9 @@ class AnyonHubbardHamiltonian:
         bc (str): Boundary condition type, default 'open'.
         L (int): Number of sites.
         N (int): Number of particles.
-        J (float or Iterable): Hopping terms, can be site-dependent.
-        U (float or Iterable): Interaction terms, can be site-dependent.
-        theta (float or Iterable): Anyonic phase, can be site-dependent.
+        J (float or Sequence): Hopping terms, can be site-dependent.
+        U (float or Sequence): Interaction terms, can be site-dependent.
+        theta (float or Sequence): Anyonic phase, can be site-dependent.
         bool_save (bool): Flag for saving computations.
 
     Notes:
@@ -44,26 +44,26 @@ class AnyonHubbardHamiltonian:
             **args_in: Arbitrary keyword arguments for parameters described
                 in the class docstring keyword args section.
         """
-        self.bc: str = args_in.get('bc', 'open')
-        if 'L' not in args_in:
+        self.bc: str = args_in.get("bc", "open")
+        if "L" not in args_in:
             raise ValueError("Argument 'L' (lattice sites) is required.")
-        self.L: int = args_in['L']
-        if 'N' not in args_in:
+        self.L: int = args_in["L"]
+        if "N" not in args_in:
             raise ValueError("Argument 'N' (number of particles) is required.")
-        self.N: int = args_in['N']
-        if 'J' not in args_in:
+        self.N: int = args_in["N"]
+        if "J" not in args_in:
             raise ValueError("Argument 'J' (hopping amplitude(s)) required.")
-        self.J: Union[float, Iterable[float]] = args_in['J']
-        if 'U' not in args_in:
+        self.J: Union[float, Sequence[float]] = args_in["J"]
+        if "U" not in args_in:
             raise ValueError("Argument 'U' (interaction term(s)) required.")
-        self.U: Union[float, Iterable[float]] = args_in['U']
-        if 'theta' not in args_in:
+        self.U: Union[float, Sequence[float]] = args_in["U"]
+        if "theta" not in args_in:
             raise ValueError("Argument 'theta' (stat. phase(s)) required.")
-        self.theta: Union[float, Iterable[float]] = args_in['theta']
+        self.theta: Union[float, Sequence[float]] = args_in["theta"]
 
         self.basis: Basis = Basis(self.L, self.N)
 
-        self.bool_save: bool = args_in.get('bool_save', False)
+        self.bool_save: bool = args_in.get("bool_save", False)
 
         self._hamilt: Optional[np.ndarray] = None
         self._evals: Optional[np.ndarray] = None
@@ -71,17 +71,11 @@ class AnyonHubbardHamiltonian:
 
         if self.bool_save:
             self.path_basis: Path = path_dirs.get_path_basis(
-                bc=self.bc,
-                L=self.L,
-                N=self.N,
-                J=self.J,
-                U=self.U,
-                theta=self.theta
+                bc=self.bc, L=self.L, N=self.N, J=self.J, U=self.U, theta=self.theta
             )
-        
+
         # plotting module
         self.plot = PlotObservables(self)
-
 
     def make_diagonalization(self) -> None:
         """
@@ -98,42 +92,42 @@ class AnyonHubbardHamiltonian:
         """
 
         if self.bool_save:
-            path_hamil_npz = self.path_basis / 'hamilt_spectrum.npz'
+            path_hamil_npz = self.path_basis / "hamilt_spectrum.npz"
 
         if self.bool_save and path_hamil_npz.is_file():
-            self._hamilt = np.load(path_hamil_npz)['hamilt_mat']
-            self._evals = np.load(path_hamil_npz)['evals']
-            self._evecs = np.load(path_hamil_npz)['evecs']
+            self._hamilt = np.load(path_hamil_npz)["hamilt_mat"]
+            self._evals = np.load(path_hamil_npz)["evals"]
+            self._evecs = np.load(path_hamil_npz)["evecs"]
             return
 
         if self.bool_save:
-            print('basis size:', self.basis.length)
+            print("basis size:", self.basis.length)
             clock_1 = time.time()
 
-        #----------------------------------------------------------------------
-        # Prepare θ, J, U as lists if they're not Iterable
-        if isinstance(self.theta, Iterable):
+        # ----------------------------------------------------------------------
+        # Prepare θ, J, U as lists if they're not Sequence
+        if isinstance(self.theta, Sequence):
             theta_list = self.theta
-        elif self.bc == 'open':
-            # theta is not iterable and open bc 
+        elif self.bc == "open":
+            # theta is not Sequence and open bc
             theta_list = [self.theta] * (self.L - 1)
         else:
-            # theta is not iterable and periodic/gauge bc 
+            # theta is not Sequence and periodic/gauge bc
             theta_list = [self.theta] * self.L
 
-        if isinstance(self.J, Iterable):
+        if isinstance(self.J, Sequence):
             J_list = self.J
-        elif self.bc == 'open':
+        elif self.bc == "open":
             J_list = [self.J] * (self.L - 1)
         else:
             J_list = [self.J] * self.L
 
-        if isinstance(self.U, Iterable):
+        if isinstance(self.U, Sequence):
             U_list = self.U
         else:
             U_list = [self.U] * self.L
 
-        #----------------------------------------------------------------------
+        # ----------------------------------------------------------------------
         # create hamiltonian matrix
         self._hamilt = construct_hamilt.get_hamilt_mat(
             bc=self.bc,
@@ -149,8 +143,8 @@ class AnyonHubbardHamiltonian:
         if self.bool_save:
             clock_2 = time.time()
             print(
-                'matrix hamiltonian created, time:',
-                other_tools.time_str(clock_2 - clock_1)
+                "matrix hamiltonian created, time:",
+                other_tools.time_str(clock_2 - clock_1),
             )
 
         # Diagonalize using eigh for Hermitian matrix
@@ -166,8 +160,8 @@ class AnyonHubbardHamiltonian:
         if self.bool_save:
             clock_3 = time.time()
             print(
-                'matrix hamiltonian has been diagonalized, time:',
-                other_tools.time_str(clock_3 - clock_2)
+                "matrix hamiltonian has been diagonalized, time:",
+                other_tools.time_str(clock_3 - clock_2),
             )
 
         # Check orthonormality
@@ -184,8 +178,8 @@ class AnyonHubbardHamiltonian:
         if self.bool_save:
             clock_4 = time.time()
             print(
-                'orthonormality has been checked, time:',
-                other_tools.time_str(clock_4 - clock_3)
+                "orthonormality has been checked, time:",
+                other_tools.time_str(clock_4 - clock_3),
             )
 
         # Save computed data
@@ -201,17 +195,16 @@ class AnyonHubbardHamiltonian:
                 N=self.N,
                 J=self.J,
                 U=self.U,
-                theta=self.theta
+                theta=self.theta,
             )
             file_size_bytes = path_hamil_npz.stat().st_size
-            file_size_MB = file_size_bytes / (1024 ** 2)
-            print(f'File size (bytes):', file_size_bytes)
-            print(f'File size (MB): {file_size_MB:.3f}')
+            file_size_MB = file_size_bytes / (1024**2)
+            print(f"File size (bytes):, {file_size_bytes}")
+            print(f"File size (MB): {file_size_MB:.3f}")
 
         if self.bool_save:
             clock_5 = time.time()
-            print('Total time consumption:', other_tools.time_str(clock_5 - clock_1))
-
+            print("Total time consumption:", other_tools.time_str(clock_5 - clock_1))
 
     def hamilt(self) -> np.ndarray:
         """
@@ -225,7 +218,6 @@ class AnyonHubbardHamiltonian:
 
         return self._hamilt
 
-
     def evals(self) -> np.ndarray:
         """
         Loads eigenvalues from the memory or cimputes them.
@@ -237,7 +229,6 @@ class AnyonHubbardHamiltonian:
             self.make_diagonalization()
 
         return self._evals
-
 
     def evecs(self) -> np.ndarray:
         """
@@ -251,7 +242,6 @@ class AnyonHubbardHamiltonian:
 
         return self._evecs
 
-
     def gs_psi(self) -> np.array:
         """
         Returns:
@@ -259,8 +249,7 @@ class AnyonHubbardHamiltonian:
         """
         return self.evecs()[0]
 
-
-    #===========================================================================
+    # ===========================================================================
     def one_site_density(self):
         """
         Calculate and return the one-site density as 1D-array
@@ -274,12 +263,10 @@ class AnyonHubbardHamiltonian:
         psi0 = self.gs_psi()
         obd = []
         for i in range(self.L):
-            obd.append(
-                np.vdot(psi0, self.basis.op_bi_bi(i).dot(psi0))
-            )
+            obd.append(np.vdot(psi0, self.basis.op_bi_bi(i).dot(psi0)))
         obd_arr = np.array(obd)
 
         if np.max(np.abs(obd_arr.imag)) > 1e-10:
-            raise ValueError('Imaginary part is larger than threshold', obd_arr)
+            raise ValueError("Imaginary part is larger than threshold", obd_arr)
 
         return obd_arr.real

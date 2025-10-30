@@ -1,14 +1,11 @@
-from typing import Union, Iterable
+from typing import Union
 import math
 import numpy as np
 from numba import njit
 
 
 @njit
-def nstate_allclose(
-    arr1: Union[np.ndarray, list],
-    arr2: Union[np.ndarray, list]
-) -> bool:
+def nstate_allclose(arr1: Union[np.ndarray, list], arr2: Union[np.ndarray, list]) -> bool:
     """
     Compare two lists/arrays element-wise within a tolerance.
 
@@ -33,17 +30,12 @@ def nstate_allclose(
     return all_close
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # hopping terms for all boundary conditions
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 @njit
 def hop_term_j(
-    j: int,
-    N: int,
-    theta: float,
-    basis1: np.ndarray,
-    basis2: np.ndarray,
-    bc: str
+    j: int, N: int, theta: float, basis1: np.ndarray, basis2: np.ndarray, bc: str
 ) -> complex:
     """
     Calculate the hopping term of sites j and j+1.
@@ -68,37 +60,31 @@ def hop_term_j(
     b2 = basis2.copy()
 
     # b_j+1
-    if b2[j+1] == 0:
+    if b2[j + 1] == 0:
         return 0
 
-    hop_jp1 = math.sqrt(b2[j+1])
-    b2[j+1] -= 1
+    hop_jp1 = math.sqrt(b2[j + 1])
+    b2[j + 1] -= 1
 
-
-    if bc == 'twisted_gauge':
+    if bc == "twisted_gauge":
         L = len(basis2)
-        exp_j = np.exp(1j*theta*b2[j]) * np.exp(-1j*theta*N/L)
+        exp_j = np.exp(1j * theta * b2[j]) * np.exp(-1j * theta * N / L)
     else:
-        exp_j = np.exp(1j*theta*b2[j])
+        exp_j = np.exp(1j * theta * b2[j])
 
     # b_j+1^t
-    hop_j = math.sqrt(b2[j]+1)
+    hop_j = math.sqrt(b2[j] + 1)
     b2[j] += 1
 
     if not nstate_allclose(basis1, b2):
         return 0
 
-    return hop_j*exp_j*hop_jp1
+    return hop_j * exp_j * hop_jp1
 
 
 @njit
 def hop_term_j_dagger(
-    j: int,
-    N: int,
-    theta: float,
-    basis1: np.ndarray,
-    basis2: np.ndarray,
-    bc: str
+    j: int, N: int, theta: float, basis1: np.ndarray, basis2: np.ndarray, bc: str
 ) -> complex:
     """
     Calculate the complex conjugate hopping term of sites j and j+1.
@@ -129,35 +115,33 @@ def hop_term_j_dagger(
     hop_j = math.sqrt(b2[j])
     b2[j] -= 1
 
-
     # exp(-i * theta * n_j)
-    if bc == 'twisted_gauge':
+    if bc == "twisted_gauge":
         L = len(basis2)
-        exp_j = np.exp(-1j*theta*b2[j]) * np.exp(1j*theta*N/L)
+        exp_j = np.exp(-1j * theta * b2[j]) * np.exp(1j * theta * N / L)
     else:
-        exp_j = np.exp(-1j*theta*b2[j]) 
-
+        exp_j = np.exp(-1j * theta * b2[j])
 
     # b_j+1^t
-    hop_jp1 = math.sqrt(b2[j+1]+1)
-    b2[j+1] += 1
+    hop_jp1 = math.sqrt(b2[j + 1] + 1)
+    b2[j + 1] += 1
 
     if not nstate_allclose(basis1, b2):
         return 0
 
-    return hop_jp1*hop_j*exp_j
+    return hop_jp1 * hop_j * exp_j
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # onesite interaction
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 @njit
 def onsite_int(j: int, basis1: np.ndarray, basis2: np.ndarray) -> float:
     """
     Calculate the onsite interaction term of site j.
 
     Calculate the onsite interaction strength by counting the number of
-    particles on site j: U/2 * n_j (n_j - 1) 
+    particles on site j: U/2 * n_j (n_j - 1)
 
     Args:
         j (int): Index of the lattice site
@@ -174,19 +158,15 @@ def onsite_int(j: int, basis1: np.ndarray, basis2: np.ndarray) -> float:
     if basis1[j] == 0:
         return 0
 
-    return basis1[j]*(basis1[j] - 1)
+    return basis1[j] * (basis1[j] - 1)
 
 
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 # for twisted boundary conditions
-#-------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------
 @njit
 def hop_term_L(
-    N: int,
-    theta: float,
-    basis1: np.ndarray,
-    basis2: np.ndarray,
-    bc: str
+    N: int, theta: float, basis1: np.ndarray, basis2: np.ndarray, bc: str
 ) -> complex:
     """
     Calculate the hopping term at site L for a lattice ring potential.
@@ -218,13 +198,13 @@ def hop_term_L(
     b2[0] -= 1
 
     # exp(i * theta * n_j)
-    if bc == 'periodic':
-        exp_L = np.exp(1j*theta*b2[-1])
-    elif bc == 'twisted':
-        exp_L = np.exp(1j*theta*b2[-1])*np.exp(-1j*theta*N)
-    elif bc == 'twisted_gauge':
+    if bc == "periodic":
+        exp_L = np.exp(1j * theta * b2[-1])
+    elif bc == "twisted":
+        exp_L = np.exp(1j * theta * b2[-1]) * np.exp(-1j * theta * N)
+    elif bc == "twisted_gauge":
         L = len(basis2)
-        exp_L = np.exp(1j*theta*b2[-1]) * np.exp(-1j*theta*N/L)
+        exp_L = np.exp(1j * theta * b2[-1]) * np.exp(-1j * theta * N / L)
     else:
         raise NotImplementedError
 
@@ -232,22 +212,18 @@ def hop_term_L(
     if b2[-1] == N:
         return 0
 
-    hop_L = math.sqrt(b2[-1]+1)
+    hop_L = math.sqrt(b2[-1] + 1)
     b2[-1] += 1
 
     if not nstate_allclose(basis1, b2):
         return 0
 
-    return hop_L*exp_L*hop_1
+    return hop_L * exp_L * hop_1
 
 
 @njit
 def hop_term_L_dagger(
-    N: int,
-    theta: float,
-    basis1: np.ndarray,
-    basis2: np.ndarray,
-    bc: str
+    N: int, theta: float, basis1: np.ndarray, basis2: np.ndarray, bc: str
 ) -> complex:
     """
     Calculate the complex conjugated hopping term at site L.
@@ -279,13 +255,13 @@ def hop_term_L_dagger(
     b2[-1] -= 1
 
     # exp(-i * theta * n_j)
-    if bc == 'periodic':
-        exp_L = np.exp(-1j*theta*b2[-1])
-    elif bc == 'twisted':
-        exp_L = np.exp(-1j*theta*b2[-1])*np.exp(1j*theta*N)
-    elif bc == 'twisted_gauge':
+    if bc == "periodic":
+        exp_L = np.exp(-1j * theta * b2[-1])
+    elif bc == "twisted":
+        exp_L = np.exp(-1j * theta * b2[-1]) * np.exp(1j * theta * N)
+    elif bc == "twisted_gauge":
         L = len(basis2)
-        exp_L = np.exp(-1j*theta*b2[-1]) * np.exp(1j*theta*N/L)
+        exp_L = np.exp(-1j * theta * b2[-1]) * np.exp(1j * theta * N / L)
     else:
         raise NotImplementedError
 
@@ -293,19 +269,18 @@ def hop_term_L_dagger(
     if b2[0] == N:
         return 0
 
-    hop_1 = math.sqrt(b2[0]+1)
+    hop_1 = math.sqrt(b2[0] + 1)
     b2[0] += 1
 
     if not nstate_allclose(basis1, b2):
         return 0
 
-    return hop_1*exp_L*hop_L
+    return hop_1 * exp_L * hop_L
 
 
-
-#===============================================================================
+# ===============================================================================
 # get element of Hamiltonian
-#===============================================================================
+# ===============================================================================
 @njit
 def get_hamilt_mn(
     bc: str,
@@ -315,8 +290,7 @@ def get_hamilt_mn(
     N: int,
     theta_list: Union[np.ndarray, list],
     b_m: np.ndarray,
-    b_n: np.ndarray
-
+    b_n: np.ndarray,
 ) -> float:
     """
     Calculate one entry of the Hamiltonian matrix.
@@ -326,9 +300,9 @@ def get_hamilt_mn(
          = <b_m | J_hop | b_n> + <b_m | U_int | b_n>
     Note that the hopping term and interaction term denote a sum over the
     lattice sites.
-    For instance see: https://arxiv.org/abs/2306.01737 Eq. (1) for open 
+    For instance see: https://arxiv.org/abs/2306.01737 Eq. (1) for open
     boundary conditions (bc). Allow here also periodic or twisted bc.
-         
+
     Args:
         bc (str): Boundary condition ('open', 'periodic', 'twisted(_gauge)')
         L (int): Number of lattice sites
@@ -346,44 +320,43 @@ def get_hamilt_mn(
 
     for ind in range(L):
 
-        #-----------------------------------------------------------------------
-        if bc == 'open':
+        # -----------------------------------------------------------------------
+        if bc == "open":
 
             # add hopping terms
-            if ind < L-1:
+            if ind < L - 1:
                 # - sum_j^L-1 J_j b_j^t exp(i*theta*n_j) b_j+1
                 H_mn -= J_list[ind] * hop_term_j(ind, N, theta_list[ind], b_m, b_n, bc)
-                 # - sum_j^L-1 J_j b_j+1^t exp(-i*theta*n_j) b_j
-                H_mn -= J_list[ind] * hop_term_j_dagger(ind, N, theta_list[ind], b_m, b_n, bc)
+                # - sum_j^L-1 J_j b_j+1^t exp(-i*theta*n_j) b_j
+                H_mn -= J_list[ind] * hop_term_j_dagger(
+                    ind, N, theta_list[ind], b_m, b_n, bc
+                )
 
             # add interaction term
             # 1/2 sum_j^L U_j n_j(n_j-1)
             H_mn += U_list[ind] / 2.0 * onsite_int(ind, b_m, b_n)
 
-
-
-        elif bc == 'twisted' or bc == 'periodic' or bc == 'twisted_gauge':
+        elif bc == "twisted" or bc == "periodic" or bc == "twisted_gauge":
 
             # add hopping terms
-            if ind < L-1:
+            if ind < L - 1:
                 # - sum_j^L-1 J_j b_j^t exp(i*theta*n_j) b_j+1
                 H_mn -= J_list[ind] * hop_term_j(ind, N, theta_list[ind], b_m, b_n, bc)
-                 # - sum_j^L-1 J_j b_j+1^t exp(-i*theta*n_j) b_j
-                H_mn -= J_list[ind] * hop_term_j_dagger(ind, N, theta_list[ind], b_m, b_n, bc)
+                # - sum_j^L-1 J_j b_j+1^t exp(-i*theta*n_j) b_j
+                H_mn -= J_list[ind] * hop_term_j_dagger(
+                    ind, N, theta_list[ind], b_m, b_n, bc
+                )
 
-
-            if ind == L-1:
+            if ind == L - 1:
                 H_mn -= J_list[ind] * hop_term_L(N, theta_list[ind], b_m, b_n, bc)
                 H_mn -= J_list[ind] * hop_term_L_dagger(N, theta_list[ind], b_m, b_n, bc)
 
-
             # add interaction term
             # 1/2 sum_j^L U_j n_j(n_j-1)
             H_mn += U_list[ind] / 2.0 * onsite_int(ind, b_m, b_n)
 
-
         else:
-            
+
             raise NotImplementedError
 
     return H_mn
@@ -395,7 +368,7 @@ def get_hamilt_mat(
     J_list: Union[np.ndarray, list],
     U_list: Union[np.ndarray, list],
     theta_list: Union[np.ndarray, list],
-    basis_list: np.ndarray
+    basis_list: np.ndarray,
 ) -> np.ndarray:
     """
     Construct the Hamiltonian matrix in number state basis.

@@ -17,5 +17,4 @@ def time_str(sec: float) -> str:
     sec %= 3600
     minute = sec // 60
     sec %= 60
-    return f'{int(hour)}h:{int(minute)}m:{sec:.2f}s'
-
+    return f"{int(hour)}h:{int(minute)}m:{sec:.2f}s"

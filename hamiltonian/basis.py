@@ -37,13 +37,14 @@ class Basis:
         self.basis_list = np.array(list(self._generate_numberstates(L, N))[::-1])
         self.length = self.basis_list.shape[0]
 
-
-    def _generate_numberstates(self, length: int, total_sum: int
-                               ) -> Generator[List[int], None, None]:
+    def _generate_numberstates(
+        self, length: int, total_sum: int
+    ) -> Generator[List[int], None, None]:
         """
         Generate all lists of a given `length` that sum to `total_sum`.
 
-        # source https://stackoverflow.com/questions/7748442/generate-all-possible-lists-of-length-n-that-sum-to-s-in-python
+        source https://stackoverflow.com/questions/7748442/
+            generate-all-possible-lists-of-length-n-that-sum-to-s-in-python
 
         Args:
             length (int): Length of the list.
@@ -61,9 +62,8 @@ class Basis:
                 ):
                     yield [value] + permutation
 
-
-    #===========================================================================
-    def op_bi_bi(self, i:int) -> np.array:
+    # ===========================================================================
+    def op_bi_bi(self, i: int) -> np.array:
         """
         Construct density operator of site i
 
@@ -76,7 +76,7 @@ class Basis:
 
         Args:
             i (int): site index
-        
+
         Returns:
             one-site operator in number state representation (np.array)
         """

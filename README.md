@@ -82,9 +82,8 @@ During the test, for specific system settings the Hamiltonian is numerically cre
 
 
 
-Setup hooks for checking code before pushing
+Setup hooks for checking code before commit using **pre-commit**, hooks are written in the file  **.pre-commit-conig.yaml**
 
-```bash
-pip install pre-commit
-pre-commit install
-```
+hooks
+
+- **black** auto-formatting according to PEP8

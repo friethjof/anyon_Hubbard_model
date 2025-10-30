@@ -87,3 +87,5 @@ Setup hooks for checking code before commit using **pre-commit**, hooks are writ
 hooks
 
 - **black** auto-formatting according to PEP8
+- **flake8** linting for style violations and errors, report issues
+- **MyPy** checks types, reports mismatches

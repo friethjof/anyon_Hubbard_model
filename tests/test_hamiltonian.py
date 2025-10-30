@@ -171,7 +171,6 @@ class TestHamilt(unittest.TestCase):
                 )
 
                 hamilt_num = anyon_class.hamilt()
-                assert False
 
                 info_msg = "\n\nconstruction of Hamiltonian failed for: "
                 info_msg += f"N={N}, L={L}, theta={theta} and open boundaries!"

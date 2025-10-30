@@ -23,6 +23,4 @@ repos:
         entry: python -m unittest discover
         language: system
         pass_filenames: false
-        args: ["-p 'test*.py'"]
-
 
